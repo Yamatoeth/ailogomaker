@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "env": {
+    "ENABLE_GPT5_PREVIEW": "1"
+  },
+  "functions": {
+    "api/**/*": {
+      "maxDuration": 30
+    }
+  }
+}
