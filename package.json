@@ -9,8 +9,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "echo 'no linter yet'",
-  "test": "echo 'No tests yet' && exit 0",
-  "dev:ai": "ENABLE_GPT5_PREVIEW=true next dev"
+    "test": "echo 'No tests yet' && exit 0",
+    "dev:ai": "ENABLE_GPT5_PREVIEW=true next dev"
   },
   "keywords": [],
   "author": "",
@@ -18,11 +18,17 @@
   "dependencies": {
     "classnames": "^2.5.1",
     "critters": "^0.0.23",
+    "framer-motion": "^12.23.12",
+    "gsap": "^3.13.0",
     "jspdf": "^3.0.1",
     "jszip": "^3.10.1",
+    "lenis": "^1.0.42",
     "next": "^14.2.31",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "@tsparticles/react": "^3.0.0",
+    "tsparticles": "^3.9.1",
+    "three": "^0.155.0",
     "upng-js": "^2.1.0",
     "zustand": "^5.0.7"
   },

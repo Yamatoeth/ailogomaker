@@ -1,9 +1,13 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLogoStore } from '@/lib/store';
 import jsPDF from 'jspdf';
 import JSZip from 'jszip';
 import * as UPNG from 'upng-js';
+import { motion, AnimatePresence } from 'framer-motion';
+import { gsap } from 'gsap';
+import { Particles } from '@tsparticles/react';
+import { loadFull } from 'tsparticles';
 
 export default function HomePage() {
   const store = useLogoStore();
@@ -15,6 +19,9 @@ export default function HomePage() {
   const [font, setFont] = useState(store.font);
   const [paletteInput, setPaletteInput] = useState(store.palette.join(','));
   const [aiMode, setAiMode] = useState(false);
+  const titleRef = useRef<HTMLHeadingElement|null>(null);
+
+  useEffect(()=>{ if (titleRef.current){ gsap.fromTo(titleRef.current.children, { y: 40, opacity:0 }, { y:0, opacity:1, stagger:0.05, duration:0.6, ease:'power3.out'}); } },[]);
 
   async function onGenerate(e?: React.FormEvent) {
     e?.preventDefault();
@@ -142,8 +149,11 @@ export default function HomePage() {
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-16 fade-in">
-      <header className="mb-16 text-center space-y-4">
-        <h1 className="text-4xl md:text-6xl font-semibold bg-gradient-to-br from-white to-neutral-500 bg-clip-text text-transparent">LogoMaker <span className="text-brand-400">AI</span></h1>
+      <header className="mb-16 text-center space-y-4 relative">
+        <Particles id="tsparticles" className="absolute inset-0 -z-10" options={{ fullScreen: { enable:false }, background: { color: { value:'transparent'} }, fpsLimit: 60, particles: { number: { value: 40 }, color: { value: '#00a6e6' }, links: { enable: true, color:'#0d3b4d' }, move: { enable: true, speed: 1 }, opacity: { value: { min:0.1, max:0.4 } }, size: { value: { min:1, max:3 } } } }} />
+        <h1 ref={titleRef} className="text-4xl md:text-6xl font-semibold tracking-tight flex justify-center gap-1 bg-gradient-to-br from-white to-neutral-500 bg-clip-text text-transparent">
+          {Array.from('LogoMaker AI').map((c,i)=>(<span key={i} className="inline-block">{c===' ' ? '\u00A0': c}</span>))}
+        </h1>
         <p className="text-neutral-400 text-lg">Nom + Domaine → Logo unique instantané (0 watermark).</p>
       </header>
       <form onSubmit={onGenerate} className="grid gap-4 md:grid-cols-5 items-end mb-10">
@@ -174,7 +184,7 @@ export default function HomePage() {
         </div>
       </form>
       {svg && (
-        <section className="grid md:grid-cols-2 gap-10 items-start">
+        <motion.section initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.4 }} className="grid md:grid-cols-2 gap-10 items-start">
           <div className="bg-neutral-900/60 p-8 rounded-xl border border-neutral-800 relative">
             <div className="absolute top-2 right-2 text-[10px] uppercase tracking-wider text-neutral-600">Preview</div>
             <div className="aspect-square flex items-center justify-center" dangerouslySetInnerHTML={{ __html: svg }} />
@@ -191,10 +201,11 @@ export default function HomePage() {
               <button onClick={()=>downloadFavicons()} className="px-4 py-2 rounded-md bg-neutral-900 border border-neutral-700 hover:bg-neutral-800 transition">Favicons ZIP</button>
             </div>
           </div>
-        </section>
+        </motion.section>
       )}
+      <AnimatePresence>
       {variants.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0 }} className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {variants.map((v,i) => (
             <button key={i} onClick={()=>setSvg(v)} className={`group relative border rounded-lg overflow-hidden aspect-square flex items-center justify-center ${svg===v?'border-brand-500':'border-neutral-800 hover:border-neutral-600'}`}>
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 opacity-0 group-hover:opacity-100 transition" />
@@ -202,8 +213,9 @@ export default function HomePage() {
               <span className="absolute bottom-1 right-1 text-[10px] px-1.5 py-0.5 rounded bg-black/60 border border-neutral-700 text-neutral-400">V{i+1}</span>
             </button>
           ))}
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
       {store.history.length > 0 && (
         <section className="mt-24">
           <h3 className="text-lg font-medium mb-4">Historique</h3>
