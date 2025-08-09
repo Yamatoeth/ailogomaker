@@ -1,1 +1,8 @@
 node_modules
+.next
+dist
+*.log
+.env.local
+.vercel
+coverage
+*.tsbuildinfo
